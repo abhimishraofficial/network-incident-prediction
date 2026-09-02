@@ -1,0 +1,43 @@
+{
+    "model_name": "Random Forest",
+    "model_version": "1.0.0",
+    "created_at": "2026-09-03T00:53:47.851945",
+    "production_threshold": 0.2,
+    "metrics": {
+        "accuracy": 0.9984081963417458,
+        "precision": 0.43617021276595747,
+        "recall": 0.9534883720930233,
+        "f1_score": 0.5985401459854015,
+        "roc_auc": 0.9995316354951557,
+        "pr_auc": 0.6703516369520758,
+        "true_negative": 34456,
+        "false_positive": 53,
+        "false_negative": 2,
+        "true_positive": 41
+    },
+    "feature_names": [
+        "cpu_usage",
+        "memory_usage",
+        "latency_ms",
+        "packet_loss",
+        "throughput_mbps",
+        "hour",
+        "day_of_week",
+        "is_peak_hour",
+        "cpu_usage_lag_1",
+        "cpu_usage_change",
+        "cpu_usage_rolling_mean_3",
+        "memory_usage_lag_1",
+        "memory_usage_change",
+        "memory_usage_rolling_mean_3",
+        "latency_ms_lag_1",
+        "latency_ms_change",
+        "latency_ms_rolling_mean_3",
+        "packet_loss_lag_1",
+        "packet_loss_change",
+        "packet_loss_rolling_mean_3",
+        "throughput_mbps_lag_1",
+        "throughput_mbps_change",
+        "throughput_mbps_rolling_mean_3"
+    ]
+}
