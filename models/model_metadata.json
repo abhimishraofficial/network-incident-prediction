@@ -2,7 +2,7 @@
     "model_name": "Random Forest",
     "model_version": "1.0.0",
     "created_at": "2026-09-03T00:53:47.851945",
-    "production_threshold": 0.2,
+    "production_threshold": 0.05,
     "metrics": {
         "accuracy": 0.9984081963417458,
         "precision": 0.43617021276595747,

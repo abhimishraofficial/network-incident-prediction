@@ -12,3 +12,5 @@ pydantic
 pytest
 matplotlib
 jupyter
+fastapi
+uvicorn

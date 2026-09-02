@@ -10,7 +10,11 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 
 # Model and metadata paths
-MODEL_PATH = PROJECT_ROOT / "models" / "random_forest.joblib"
+MODEL_PATH = (
+    PROJECT_ROOT
+    / "models"
+    / "random_forest.joblib"
+)
 
 METADATA_PATH = (
     PROJECT_ROOT
@@ -29,9 +33,7 @@ def load_model():
             f"Model not found: {MODEL_PATH}"
         )
 
-    model = joblib.load(MODEL_PATH)
-
-    return model
+    return joblib.load(MODEL_PATH)
 
 
 def load_metadata():
@@ -46,11 +48,11 @@ def load_metadata():
 
     with open(
         METADATA_PATH,
-        "r"
+        "r",
+        encoding="utf-8"
     ) as file:
-        metadata = json.load(file)
 
-    return metadata
+        return json.load(file)
 
 
 def validate_features(
@@ -59,8 +61,14 @@ def validate_features(
 ):
     """
     Validate that prediction input contains
-    the expected ML features.
+    all expected ML features and preserve
+    the training feature order.
     """
+
+    if not isinstance(features, pd.DataFrame):
+        raise TypeError(
+            "Features must be a pandas DataFrame."
+        )
 
     missing_features = [
         feature
@@ -74,11 +82,7 @@ def validate_features(
             f"{missing_features}"
         )
 
-    # Keep only expected features
-    # and preserve training column order
-    features = features[expected_features]
-
-    return features
+    return features[expected_features]
 
 
 def predict_incident(
@@ -88,8 +92,11 @@ def predict_incident(
     Predict the probability of a future
     network incident.
 
-    Returns prediction probability,
-    threshold, prediction and status.
+    Returns:
+        incident probability,
+        production threshold,
+        prediction,
+        and status.
     """
 
     # Load trained model
@@ -98,8 +105,31 @@ def predict_incident(
     # Load model metadata
     metadata = load_metadata()
 
+    # Validate metadata
+    if "feature_names" not in metadata:
+        raise ValueError(
+            "feature_names not found in model metadata."
+        )
+
     # Get expected feature names
-    expected_features = metadata["feature_names"]
+    expected_features = metadata[
+        "feature_names"
+    ]
+
+    # Get production threshold
+    threshold = float(
+        metadata.get(
+            "production_threshold",
+            0.05
+        )
+    )
+
+    # Validate threshold
+    if not 0 <= threshold <= 1:
+        raise ValueError(
+            "production_threshold must be "
+            "between 0 and 1."
+        )
 
     # Validate and order features
     features = validate_features(
@@ -108,24 +138,19 @@ def predict_incident(
     )
 
     # Predict incident probability
-    probability = model.predict_proba(
-        features
-    )[0][1]
+    probability = float(
+        model.predict_proba(features)[0][1]
+    )
 
-    # Get production threshold
-    threshold = metadata[
-        "production_threshold"
-    ]
-
-    # Final prediction
+    # Apply production threshold
     prediction = int(
         probability >= threshold
     )
 
-    # Return result
+    # Return API response
     return {
         "incident_probability": round(
-            float(probability),
+            probability,
             4
         ),
         "production_threshold": threshold,
@@ -136,3 +161,9 @@ def predict_incident(
             else "NORMAL"
         )
     }
+
+
+if __name__ == "__main__":
+    print(
+        "prediction.py loaded successfully"
+    )
