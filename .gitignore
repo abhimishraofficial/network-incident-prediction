@@ -23,3 +23,10 @@ Thumbs.db
 # Large/generated data
 data/raw/
 data/processed/
+
+# SQLite database
+data/*.db
+*.db
+
+# Pytest cache
+.pytest_cache/

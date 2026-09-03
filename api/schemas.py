@@ -67,3 +67,53 @@ class PredictionResponse(BaseModel):
     production_threshold: float
     prediction: int
     status: str
+
+
+class SavedPrediction(BaseModel):
+    """
+    A prediction saved in the SQLite database.
+    """
+
+    id: int
+    timestamp: str
+    cpu_usage: float
+    memory_usage: float
+    latency_ms: float
+    packet_loss: float
+    throughput_mbps: float
+    incident_probability: float
+    production_threshold: float
+    prediction: int
+    status: str
+
+
+class PredictionsResponse(BaseModel):
+    """
+    Response containing saved predictions.
+    """
+
+    total_predictions: int
+    predictions: List[SavedPrediction]
+
+
+class StatisticsResponse(BaseModel):
+    """
+    Response containing prediction statistics.
+    """
+
+    total_predictions: int
+    incident_predictions: int
+    normal_predictions: int
+    incident_rate: float
+    average_incident_probability: float
+
+
+class HealthResponse(BaseModel):
+    """
+    Response containing application health status.
+    """
+
+    status: str
+    model_available: bool
+    metadata_available: bool
+    database_available: bool
